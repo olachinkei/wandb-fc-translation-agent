@@ -1,0 +1,1 @@
+{"errorMessage": "Syntax error in module 'handler': f-string: unmatched '[' (handler.py, line 95)", "errorType": "Runtime.UserCodeSyntaxError", "requestId": "", "stackTrace": ["  File \"/var/task/handler.py\" Line 95\n            self.target_project = f\"{os.environ[\"WANDB_ENTITY\"]}/{os.environ[\"WANDB_PROJECT\"]}\"\n"]}
