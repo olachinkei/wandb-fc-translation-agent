@@ -1,4 +1,4 @@
-# W&B FC-Translation Agent
+# W&B FC-Agent
 
 An automated tool for translating Weights & Biases (W&B) Reports using Amazon Bedrock and Slack integration.
 
