@@ -18,7 +18,7 @@ app = AsyncApp(token=SLACK_BOT_TOKEN)
 br_client = boto3.client("bedrock-agent-runtime", region_name=REGION)
 
 @weave.op()
-def invoke_bedrock_agent(user_input: str, mode: str = "normal") -> Union[str, dict]:
+async def invoke_bedrock_agent(user_input: str, mode: str = "normal") -> Union[str, dict]:
     """Invoke Bedrock agent and return the response.
     
     Args:
@@ -146,7 +146,7 @@ async def handle_app_mention(event, say):
     cleaned_text = text.split("<@", 1)[-1].split(">", 1)[-1].strip()
 
     # Bedrock Agent へ送信
-    agent_response = invoke_bedrock_agent(cleaned_text)
+    agent_response = await invoke_bedrock_agent(cleaned_text)
 
     # Slack に返信（必ずスレッドに返信）
     response = await say(
