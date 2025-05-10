@@ -174,3 +174,8 @@ cython_debug/
 .pypirc
 
 .DS_Store
+
+amazon-bedrock-agent-samples/
+
+# AWS Task Definition
+task-definition.json
