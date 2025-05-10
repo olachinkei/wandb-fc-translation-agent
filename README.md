@@ -52,15 +52,25 @@ The system consists of several components working together to provide seamless t
 1. Create a `.env` file with the following environment variables:
 
 ```
+# W&B Configuration
 WANDB_API_KEY=your_wandb_api_key
-SLACK_TOKEN=your_slack_bot_token
+WANDB_ENTITY=wandb-japan
+WANDB_PROJECT=fc-agent
+
+# Slack Configuration
+SLACK_BOT_TOKEN=xoxb-your-slack-bot-token
+SLACK_APP_TOKEN=xapp-your-slack-app-token
+SLACK_SIGNING_SECRET=your-slack-signing-secret
+SLACK_CHANNEL=#fc-agent
+
+# AWS Configuration
+AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_aws_access_key_id
 AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
-WANDB_TARGET_PROJECT=wandb-japan/fc-reports  # default
-SLACK_CHANNEL=#wandb-translations  # default
-AWS_REGION=us-west-2  # default
-DEFAULT_LANGUAGE=jp  # default
-MAX_CHUNK_SIZE=1000  # default
+
+# Bedrock Agent Configuration
+AGENT_ID=your_agent_id
+AGENT_ALIAS_ID=your_agent_alias_id
 ```
 
 ### Installation
