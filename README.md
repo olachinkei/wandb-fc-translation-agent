@@ -1,180 +1,76 @@
-# W&B Report Translator
+# W&B FC-Translation Agent
 
-A tool for automatically translating W&B Reports using Amazon Bedrock and Slack integration.
+An automated tool for translating Weights & Biases (W&B) Reports using Amazon Bedrock and Slack integration.
 
 ## Features
 
-- Copy W&B Reports to a target project
-- Translate report content using Amazon Bedrock
-- Notify Slack about translation progress
-- Support for Japanese and Korean translations
-- Integration with Weave for prompts and dictionaries
-- Secure configuration management using environment variables
+- Slack Integration: Mention @fc-agent in the #fc-agent Slack channel to interact with the Amazon Bedrock agent
+- Current Available Functions:
+  - **Translation**: Provide a W&B Report URL with a translation request (e.g., "translate to Japanese") to receive a URL of the translated report
+  - **Prompt Management**:
+    - View current prompt: Ask "What is the current prompt?" to see the active translation prompt
+    - Update prompt: Request "Update the prompt to {new prompt}" to modify the translation prompt (Updates the [prompt in Weave](https://wandb.ai/wandb-japan/fc-agent/weave/prompts))
+- Upcoming Features:
+  - Japanese W&B Report mirroring to Note
+  - Korean W&B Report mirroring to Medium
 
-## Installation
+## Architecture
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/wandb-fc-translation-agent.git
-cd wandb-fc-translation-agent
+- Deployment: ECS on Fargate
+- Agent: Amazon Bedrock agent with Lambda function integration
+- Communication: Slack WebSocket API
+
+## Local Development Setup
+
+### Prerequisites
+
+1. Create a `.env` file with the following environment variables:
+
+```
+WANDB_API_KEY=your_wandb_api_key
+SLACK_TOKEN=your_slack_bot_token
+AWS_ACCESS_KEY_ID=your_aws_access_key_id
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+WANDB_TARGET_PROJECT=wandb-japan/fc-reports  # default
+SLACK_CHANNEL=#wandb-translations  # default
+AWS_REGION=us-west-2  # default
+DEFAULT_LANGUAGE=jp  # default
+MAX_CHUNK_SIZE=1000  # default
 ```
 
-2. Install dependencies:
+### Installation
+
+1. Set up a virtual environment and install dependencies:
 ```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Set up configuration:
+2. Start the application:
 ```bash
-# Copy the template file
-cp .env.template .env
-
-# Edit the .env file with your credentials
-nano .env
+python app.py
 ```
-
-The `.env` file should contain:
-```bash
-# W&B Configuration
-WANDB_API_KEY=your_wandb_api_key
-WANDB_TARGET_PROJECT=wandb-japan/fc-reports
-
-# Slack Configuration
-SLACK_TOKEN=your_slack_token
-SLACK_CHANNEL=#wandb-translations
-
-# AWS Configuration
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=us-west-2
-
-# Translation Configuration
-DEFAULT_LANGUAGE=jp
-MAX_CHUNK_SIZE=1000
-```
-
-## Usage
-
-```python
-from wandb_translator.translator import WandBReportTranslator
-
-# Initialize the translator (credentials will be loaded from environment variables)
-translator = WandBReportTranslator()
-
-# Or provide credentials explicitly
-translator = WandBReportTranslator(
-    wandb_api_key="your_wandb_api_key",
-    slack_token="your_slack_token",
-    bedrock_region="us-west-2",
-    target_project="wandb-japan/fc-reports"
-)
-
-# Translate a report
-new_url, new_title = translator.wandb_report_transformation(
-    original_report_url="https://wandb.ai/your-project/your-report",
-    language="jp",
-    prompt_path="your/prompt/path",
-    dictionary_path="your/dictionary/path"
-)
-```
-
-## Configuration
-
-The application uses a configuration system that supports:
-
-1. Environment variables
-2. `.env` file
-3. Explicit parameters in the constructor
-
-The configuration is validated on initialization to ensure all required variables are set.
-
-### Required Environment Variables
-
-- `WANDB_API_KEY`: Your W&B API key
-- `SLACK_TOKEN`: Your Slack bot token
-- `AWS_ACCESS_KEY_ID`: Your AWS access key ID
-- `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key
-
-### Optional Environment Variables
-
-- `WANDB_TARGET_PROJECT`: Target project for translated reports (default: "wandb-japan/fc-reports")
-- `SLACK_CHANNEL`: Slack channel for notifications (default: "#wandb-translations")
-- `AWS_REGION`: AWS region for Bedrock (default: "us-west-2")
-- `DEFAULT_LANGUAGE`: Default language for translation (default: "jp")
-- `MAX_CHUNK_SIZE`: Maximum size of content chunks for translation (default: 1000)
 
 ## Testing
 
-### Setup
+The project includes comprehensive test suites:
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+### Unit Tests
+- `tests/unit_test1.py`: Tests for report copying functionality
+- `tests/unit_test2.py`: Tests for content translation functionality
 
-2. Set up environment variables in `.env` file:
-```bash
-# W&B Configuration
-WANDB_API_KEY=your_wandb_api_key
-WANDB_TARGET_PROJECT=wandb-japan/fc-reports
+### Evaluation Tests
+- `tests/eval1.py`: Comprehensive evaluation of translation capability using Weave Evaluation (tests 50 reports)
+- `tests/eval2.py`: Evaluation of tool selection and task completion across various scenarios
 
-# Slack Configuration
-SLACK_TOKEN=your_slack_token
-SLACK_CHANNEL=#wandb-translations
+For detailed testing instructions, please refer to `tests/README.md`. Note that running tests does not require the main application (`app.py`) to be running.
 
-# AWS Configuration
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=us-west-2
+## Current Development Tasks
 
-# Translation Configuration
-DEFAULT_LANGUAGE=jp
-MAX_CHUNK_SIZE=1000
-```
-
-### Running Tests
-
-Run all tests:
-```bash
-pytest tests/
-```
-
-Run specific test file:
-```bash
-pytest tests/test_unit1.py
-```
-
-Run tests with verbose output:
-```bash
-pytest -v tests/
-```
-
-### Test Structure
-
-The tests are organized as follows:
-
-- `tests/test_unit1.py`: Tests for report copying functionality
-- `tests/test_unit2.py`: Tests for content translation functionality
-
-Each test uses actual API calls to verify the functionality.
-
-## Project Structure
-
-```
-wandb-fc-translation-agent/
-├── src/
-│   └── wandb_translator/
-│       ├── __init__.py
-│       ├── translator.py
-│       └── config.py
-├── tests/
-│   ├── test_unit1.py
-│   └── test_unit2.py
-├── requirements.txt
-├── .env.template
-└── README.md
-```
+- Bug fixes for W&B Report copying functionality
+- Implementation of Human Feedback system
 
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
