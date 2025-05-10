@@ -2,9 +2,12 @@
 
 An automated tool for translating Weights & Biases (W&B) Reports using Amazon Bedrock and Slack integration.
 
+![System Overview](docs/images/overview.png)
+
 ## Features
 
 - Slack Integration: Mention @fc-agent in the #fc-agent Slack channel to interact with the Amazon Bedrock agent
+
 - Current Available Functions:
   - **Translation**: Provide a W&B Report URL with a translation request (e.g., "translate to Japanese") to receive a URL of the translated report
   - **Prompt Management**:
@@ -14,11 +17,33 @@ An automated tool for translating Weights & Biases (W&B) Reports using Amazon Be
   - Japanese W&B Report mirroring to Note
   - Korean W&B Report mirroring to Medium
 
-## Architecture
+## System Architecture
 
-- Deployment: ECS on Fargate
-- Agent: Amazon Bedrock agent with Lambda function integration
-- Communication: Slack WebSocket API
+The system consists of several components working together to provide seamless translation services:
+
+![Architecture Diagram](docs/images/architecture.png)
+
+### Components
+
+1. **Slack Interface**
+   - Handles user interactions through Slack
+   - Processes mentions and commands
+   - Uses WebSocket API for real-time communication
+
+2. **ECS on Fargate**
+   - Minimal deployment configuration
+   - Scalable container orchestration
+   - Cost-effective resource management
+
+3. **Amazon Bedrock Agent**
+   - Manages the translation workflow
+   - Processes natural language commands
+   - Integrates with Lambda functions for specific tasks
+
+4. **W&B Integration**
+   - Handles report access and creation
+   - Manages permissions and API interactions
+   - Ensures proper content synchronization
 
 ## Local Development Setup
 
