@@ -45,6 +45,8 @@ The system consists of several components working together to provide seamless t
    - Manages permissions and API interactions
    - Ensures proper content synchronization
 
+- wandb/japan 
+
 ## Local Development Setup
 
 ### Prerequisites
@@ -55,7 +57,7 @@ The system consists of several components working together to provide seamless t
 # W&B Configuration
 WANDB_API_KEY=your_wandb_api_key
 WANDB_ENTITY=wandb-japan
-WANDB_PROJECT=fc-agent
+WANDB_PROJECT=fc-agent # for dev, fc-agent-dev
 
 # Slack Configuration
 SLACK_BOT_TOKEN=xoxb-your-slack-bot-token
